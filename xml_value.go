@@ -9,7 +9,7 @@ type value struct {
 	XMLName  xml.Name   `xml:"value"`
 	Array    *array     `xml:"array,omitempty"`
 	Base64   []byte     `xml:"base64,omitempty"`
-	Boolean  bool       `xml:"boolean,omitempty"`
+	Boolean  *bool      `xml:"boolean,omitempty"`
 	DateTime string     `xml:"dateTime.iso8601,omitempty"`
 	Double   float64    `xml:"double,omitempty"`
 	I4       int        `xml:"i4,omitempty"`
@@ -38,7 +38,7 @@ func (v value) AsBytes() []byte {
 }
 
 func (v value) AsBool() bool {
-	return v.Boolean
+	return *v.Boolean
 }
 
 func (v value) AsTime() time.Time {

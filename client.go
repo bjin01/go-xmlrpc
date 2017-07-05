@@ -27,7 +27,9 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 		v := reflect.ValueOf(arg)
 		switch v.Kind() {
 		case reflect.Bool:
-			results = append(results, value{Boolean: v.Bool()})
+			ptr := new(bool)
+			*ptr = v.Bool()
+			results = append(results, value{Boolean: ptr})
 		case reflect.Int:
 			fallthrough
 		case reflect.Int8:

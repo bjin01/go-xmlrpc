@@ -58,4 +58,54 @@ var _ = Describe("Value", func() {
 			Expect(val.AsArray()[1].AsString()).To(Equal("bar"))
 		})
 	})
+
+	Context("Encoding booleans", func() {
+		It("Can encode true", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><boolean>true</boolean></value></param></params></methodCall>`,
+				`<?xml version="1.0"?><methodResponse><params><param></param></params></methodResponse>`,
+			)
+
+			_, err := client.Call("test", true)
+
+			Expect(err).To(BeNil())
+		})
+
+		It("Can encode false", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><boolean>false</boolean></value></param></params></methodCall>`,
+				`<?xml version="1.0"?><methodResponse><params><param></param></params></methodResponse>`,
+			)
+
+			_, err := client.Call("test", false)
+
+			Expect(err).To(BeNil())
+		})
+	})
+
+	Context("Decoding booleans", func() {
+		It("Can decode true", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><boolean>true</boolean></value></param></params></methodResponse>`,
+			)
+
+			val, err := client.Call("test")
+
+			Expect(err).To(BeNil())
+			Expect(val.AsBool()).To(Equal(true))
+		})
+
+		It("Can decode false", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><boolean>false</boolean></value></param></params></methodResponse>`,
+			)
+
+			val, err := client.Call("test")
+
+			Expect(err).To(BeNil())
+			Expect(val.AsBool()).To(Equal(false))
+		})
+	})
 })
