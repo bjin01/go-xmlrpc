@@ -81,7 +81,7 @@ func (c *client) Call(methodName string, args ...interface{}) (Value, error) {
 		return nil, err
 	}
 
-	response, err := c.client.Post(c.endpoint, "text/xml; charset=utf-8", buffer)
+	response, err := c.client.Post(c.endpoint, "text/xml", buffer)
 	if err != nil {
 		return nil, err
 	}
