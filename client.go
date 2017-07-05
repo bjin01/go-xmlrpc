@@ -93,9 +93,27 @@ func (c *client) Call(methodName string, args ...interface{}) (Value, error) {
 		return nil, err
 	}
 
-	if len(methodResponse.ParamsTag.ParamTags) != 1 {
+	if methodResponse.ParamsTag != nil && len(methodResponse.ParamsTag.ParamTags) != 1 {
 		return nil, &XMLRPCError{"Invalid amount of return values"}
 	}
 
-	return methodResponse.ParamsTag.ParamTags[0].ValueTag, nil
+	if methodResponse.ParamsTag != nil && methodResponse.FaultTag == nil {
+		return methodResponse.ParamsTag.ParamTags[0].ValueTag, nil
+	}
+
+	if methodResponse.FaultTag != nil && methodResponse.ParamsTag == nil {
+		members := make(map[string]Value)
+
+		for _, member := range methodResponse.FaultTag.ValueTag.Struct.MemberTags {
+			members[member.NameTag] = member.ValueTag
+		}
+
+		return nil, &XMLRPCFault{
+			message: members["faultString"].AsString(),
+			code:    members["faultCode"].AsInt(),
+		}
+	}
+
+	return nil, &XMLRPCError{"Invalid amount of return values"}
+
 }
