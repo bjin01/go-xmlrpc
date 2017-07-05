@@ -9,8 +9,16 @@ import (
 
 var _ = Describe("Value", func() {
 	var (
-		server *ghttp.Server
-		client xmlrpc.Client
+		server           *ghttp.Server
+		client           xmlrpc.Client
+		verifyAndRespond = func(request, response string) {
+			server.AppendHandlers(
+				ghttp.CombineHandlers(
+					ghttp.VerifyBody([]byte(request)),
+					ghttp.RespondWith(200, []byte(response)),
+				),
+			)
+		}
 	)
 
 	BeforeEach(func() {
@@ -23,14 +31,9 @@ var _ = Describe("Value", func() {
 	})
 
 	It("Can encode slices", func() {
-		request := `<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><array><data><value><string>foo</string></value><value><string>bar</string></value></data></array></value></param></params></methodCall>`
-		response := `<?xml version="1.0"?><methodResponse><params><param><boolean>true</boolean></param></params></methodResponse>`
-
-		server.AppendHandlers(
-			ghttp.CombineHandlers(
-				ghttp.VerifyBody([]byte(request)),
-				ghttp.RespondWith(200, []byte(response)),
-			),
+		verifyAndRespond(
+			`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><array><data><value><string>foo</string></value><value><string>bar</string></value></data></array></value></param></params></methodCall>`,
+			`<?xml version="1.0"?><methodResponse><params><param><boolean>true</boolean></param></params></methodResponse>`,
 		)
 
 		_, err := client.Call("test", []interface{}{"foo", "bar"})
@@ -39,14 +42,9 @@ var _ = Describe("Value", func() {
 	})
 
 	It("Can decode slices", func() {
-		request := `<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`
-		response := `<?xml version="1.0"?><methodResponse><params><param><value><array><data><value><string>foo</string></value><value><string>bar</string></value></data></array></value></param></params></methodResponse>`
-
-		server.AppendHandlers(
-			ghttp.CombineHandlers(
-				ghttp.VerifyBody([]byte(request)),
-				ghttp.RespondWith(200, []byte(response)),
-			),
+		verifyAndRespond(
+			`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+			`<?xml version="1.0"?><methodResponse><params><param><value><array><data><value><string>foo</string></value><value><string>bar</string></value></data></array></value></param></params></methodResponse>`,
 		)
 
 		val, err := client.Call("test")
