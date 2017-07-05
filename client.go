@@ -74,7 +74,7 @@ func (c *client) Call(methodName string, args ...interface{}) (Value, error) {
 		methodCall.ParamsTag.ParamTags = append(methodCall.ParamsTag.ParamTags, parameter{ValueTag: value})
 	}
 
-	buffer := bytes.NewBuffer([]byte{})
+	buffer := bytes.NewBuffer([]byte(`<?xml version="1.0"?>`))
 
 	err = xml.NewEncoder(buffer).Encode(methodCall)
 	if err != nil {
