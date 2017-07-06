@@ -39,7 +39,9 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 		case reflect.Int32:
 			results = append(results, value{Int: int(v.Int())})
 		case reflect.Float64:
-			results = append(results, value{Double: v.Float()})
+			ptr := new(float64)
+			*ptr = v.Float()
+			results = append(results, value{Double: ptr})
 		case reflect.Array:
 			fallthrough
 		case reflect.Slice:

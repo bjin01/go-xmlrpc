@@ -11,7 +11,7 @@ type value struct {
 	Base64   []byte     `xml:"base64,omitempty"`
 	Boolean  *bool      `xml:"boolean,omitempty"`
 	DateTime string     `xml:"dateTime.iso8601,omitempty"`
-	Double   float64    `xml:"double,omitempty"`
+	Double   *float64   `xml:"double,omitempty"`
 	I4       int        `xml:"i4,omitempty"`
 	Int      int        `xml:"int,omitempty"`
 	String   string     `xml:"string,omitempty"`
@@ -51,7 +51,7 @@ func (v value) AsTime() time.Time {
 }
 
 func (v value) AsDouble() float64 {
-	return v.Double
+	return *v.Double
 }
 
 func (v value) AsInt() int {
