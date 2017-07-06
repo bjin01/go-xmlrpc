@@ -112,7 +112,7 @@ var _ = Describe("Value", func() {
 	Context("Encoding doubles", func() {
 		It("Can encode 0.0", func() {
 			verifyAndRespond(
-				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><double>0.0</double></value></param></params></methodCall>`,
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><double>0</double></value></param></params></methodCall>`,
 				`<?xml version="1.0"?><methodResponse><params><param><value><boolean>true</boolean></value></param></params></methodResponse>`,
 			)
 
