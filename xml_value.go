@@ -12,8 +12,8 @@ type value struct {
 	Boolean  *bool      `xml:"boolean,omitempty"`
 	DateTime string     `xml:"dateTime.iso8601,omitempty"`
 	Double   *float64   `xml:"double,omitempty"`
-	I4       int        `xml:"i4,omitempty"`
-	Int      int        `xml:"int,omitempty"`
+	I4       *int       `xml:"i4,omitempty"`
+	Int      *int       `xml:"int,omitempty"`
 	String   string     `xml:"string,omitempty"`
 	Struct   *structure `xml:"struct,omitempty"`
 	Nil      string     `xml:"nil,omitempty"`
@@ -55,7 +55,7 @@ func (v value) AsDouble() float64 {
 }
 
 func (v value) AsInt() int {
-	return v.Int
+	return *v.Int
 }
 
 func (v value) AsNil() interface{} {
