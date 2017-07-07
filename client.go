@@ -47,7 +47,12 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 		case reflect.Array:
 			fallthrough
 		case reflect.Slice:
-			values, err := c.values(arg.([]interface{})...)
+			arguments := make([]interface{}, v.Len())
+			for index := 0; index < v.Len(); index++ {
+				arguments[index] = v.Index(index).Interface()
+			}
+
+			values, err := c.values(arguments...)
 			if err != nil {
 				return nil, err
 			}
