@@ -308,7 +308,7 @@ var _ = Describe("Value", func() {
 	Context("Encoding structs", func() {
 		It("Can encode {\"foo\":\"bar\",\"answers\":[42]}", func() {
 			verifyAndRespond(
-				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><struct><member><name>foo</name><value><string>bar</string></value></member><member><name>answers</name><value><array><data><value><int>42</int></value></data></array></value></member></struct></value></param></params></methodCall>`,
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><struct><member><name>answers</name><value><array><data><value><int>42</int></value></data></array></value></member><member><name>foo</name><value><string>bar</string></value></member></struct></value></param></params></methodCall>`,
 				`<?xml version="1.0"?><methodResponse><params><param><value><boolean>true</boolean></value></param></params></methodResponse>`,
 			)
 
@@ -322,18 +322,19 @@ var _ = Describe("Value", func() {
 		It("Can decode {\"foo\":\"bar\",\"answers\":[42]}", func() {
 			verifyAndRespond(
 				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
-				`<?xml version="1.0"?><methodResponse><params><param><value><struct><member><name>foo</name><value><string>bar</string></value></member><member><name>answers</name><value><array><data><value><int>42</int></value></data></array></value></member></struct></value></param></params></methodResponse>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><struct><member><name>answers</name><value><array><data><value><int>42</int></value></data></array></value></member><member><name>foo</name><value><string>bar</string></value></member></struct></value></param></params></methodResponse>`,
 			)
 
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
 			Expect(len(val.AsStruct())).To(Equal(2))
-			Expect(val.AsStruct()[0].Name()).To(Equal("foo"))
-			Expect(val.AsStruct()[0].Value().AsString()).To(Equal("bar"))
-			Expect(val.AsStruct()[1].Name()).To(Equal("answers"))
-			Expect(len(val.AsStruct()[1].Value().AsArray())).To(Equal(1))
-			Expect(val.AsStruct()[1].Value().AsArray()[0].AsInt()).To(Equal(42))
+
+			Expect(val.AsStruct()[0].Name()).To(Equal("answers"))
+			Expect(len(val.AsStruct()[0].Value().AsArray())).To(Equal(1))
+			Expect(val.AsStruct()[0].Value().AsArray()[0].AsInt()).To(Equal(42))
+			Expect(val.AsStruct()[1].Name()).To(Equal("foo"))
+			Expect(val.AsStruct()[1].Value().AsString()).To(Equal("bar"))
 		})
 	})
 })

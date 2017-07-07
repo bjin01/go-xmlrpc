@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"net/http"
 	"reflect"
+	"sort"
 	"strconv"
 )
 
@@ -64,14 +65,21 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 			*ptr = v.String()
 			results = append(results, value{String: ptr})
 		case reflect.Map:
-			members := []member{}
+			members := make([]member, v.Len())
+			keys := make([]string, v.Len())
 
-			for _, key := range v.MapKeys() {
+			for index, key := range v.MapKeys() {
 				if key.Kind() != reflect.String {
 					return nil, &XMLRPCError{"Invalid type " + v.Kind().String()}
 				}
 
-				values, err := c.values(v.MapIndex(key).Interface())
+				keys[index] = key.String()
+			}
+
+			sort.Strings(keys)
+
+			for index, key := range keys {
+				values, err := c.values(v.MapIndex(reflect.ValueOf(key)).Interface())
 				if err != nil {
 					return nil, err
 				}
@@ -80,7 +88,8 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 					return nil, &XMLRPCError{"Expected 1 element, got " + strconv.Itoa(len(values))}
 				}
 
-				members = append(members, member{NameTag: key.String(), ValueTag: values[0]})
+				members[index].NameTag = key
+				members[index].ValueTag = values[0]
 			}
 
 			results = append(results, value{Struct: &structure{MemberTags: members}})
