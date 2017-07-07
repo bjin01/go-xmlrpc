@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"net/http"
 	"reflect"
+	"strconv"
 )
 
 type Client interface {
@@ -62,6 +63,27 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 			ptr := new(string)
 			*ptr = v.String()
 			results = append(results, value{String: ptr})
+		case reflect.Map:
+			members := []member{}
+
+			for _, key := range v.MapKeys() {
+				if key.Kind() != reflect.String {
+					return nil, &XMLRPCError{"Invalid type " + v.Kind().String()}
+				}
+
+				values, err := c.values(v.MapIndex(key).Interface())
+				if err != nil {
+					return nil, err
+				}
+
+				if len(values) != 1 {
+					return nil, &XMLRPCError{"Expected 1 element, got " + strconv.Itoa(len(values))}
+				}
+
+				members = append(members, member{NameTag: key.String(), ValueTag: values[0]})
+			}
+
+			results = append(results, value{Struct: &structure{MemberTags: members}})
 		default:
 			return nil, &XMLRPCError{"Invalid type " + v.Kind().String()}
 		}
