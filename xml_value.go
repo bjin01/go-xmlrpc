@@ -6,27 +6,27 @@ import (
 )
 
 type value struct {
-	XMLName  xml.Name   `xml:"value"`
-	Array    *array     `xml:"array,omitempty"`
-	Base64   []byte     `xml:"base64,omitempty"`
-	Boolean  *bool      `xml:"boolean,omitempty"`
-	DateTime string     `xml:"dateTime.iso8601,omitempty"`
-	Double   *float64   `xml:"double,omitempty"`
-	I4       *int       `xml:"i4,omitempty"`
-	Int      *int       `xml:"int,omitempty"`
-	String   *string    `xml:"string,omitempty"`
-	Struct   *structure `xml:"struct,omitempty"`
-	Nil      string     `xml:"nil,omitempty"`
+	XMLName        xml.Name   `xml:"value"`
+	ArrayValueTags *[]value   `xml:"array>data>value,omitempty"`
+	Base64         []byte     `xml:"base64,omitempty"`
+	Boolean        *bool      `xml:"boolean,omitempty"`
+	DateTime       string     `xml:"dateTime.iso8601,omitempty"`
+	Double         *float64   `xml:"double,omitempty"`
+	I4             *int       `xml:"i4,omitempty"`
+	Int            *int       `xml:"int,omitempty"`
+	String         *string    `xml:"string,omitempty"`
+	Struct         *structure `xml:"struct,omitempty"`
+	Nil            string     `xml:"nil,omitempty"`
 }
 
 func (v value) AsArray() []Value {
-	if v.Array == nil {
+	if v.ArrayValueTags == nil {
 		return []Value{}
 	}
 
-	values := make([]Value, 0, len(v.Array.DataTag.ValueTags))
+	values := make([]Value, 0, len(*v.ArrayValueTags))
 
-	for _, value := range v.Array.DataTag.ValueTags {
+	for _, value := range *v.ArrayValueTags {
 		values = append(values, value)
 	}
 

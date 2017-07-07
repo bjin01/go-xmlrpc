@@ -59,7 +59,7 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 				return nil, err
 			}
 
-			results = append(results, value{Array: &array{DataTag: data{ValueTags: values}}})
+			results = append(results, value{ArrayValueTags: &values})
 		case reflect.String:
 			ptr := new(string)
 			*ptr = v.String()
