@@ -14,7 +14,7 @@ type value struct {
 	Double   *float64   `xml:"double,omitempty"`
 	I4       *int       `xml:"i4,omitempty"`
 	Int      *int       `xml:"int,omitempty"`
-	String   string     `xml:"string,omitempty"`
+	String   *string    `xml:"string,omitempty"`
 	Struct   *structure `xml:"struct,omitempty"`
 	Nil      string     `xml:"nil,omitempty"`
 }
@@ -63,7 +63,7 @@ func (v value) AsNil() interface{} {
 }
 
 func (v value) AsString() string {
-	return v.String
+	return *v.String
 }
 
 func (v value) AsStruct() []Member {

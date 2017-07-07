@@ -54,7 +54,9 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 
 			results = append(results, value{Array: &array{DataTag: data{ValueTags: values}}})
 		case reflect.String:
-			results = append(results, value{String: v.String()})
+			ptr := new(string)
+			*ptr = v.String()
+			results = append(results, value{String: ptr})
 		default:
 			return nil, &XMLRPCError{"Invalid type " + v.Kind().String()}
 		}
