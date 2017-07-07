@@ -254,4 +254,54 @@ var _ = Describe("Value", func() {
 			Expect(val.AsInt()).To(Equal(-1337))
 		})
 	})
+
+	Context("Encoding strings", func() {
+		It("Can encode \"\"", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><string></string></value></param></params></methodCall>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><boolean>true</boolean></value></param></params></methodResponse>`,
+			)
+
+			_, err := client.Call("test", "")
+
+			Expect(err).To(BeNil())
+		})
+
+		It("Can encode \"Hello, world!\"", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><string>Hello, world!</string></value></param></params></methodCall>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><boolean>true</boolean></value></param></params></methodResponse>`,
+			)
+
+			_, err := client.Call("test", "Hello, world!")
+
+			Expect(err).To(BeNil())
+		})
+	})
+
+	Context("Decoding strings", func() {
+		It("Can decode \"\"", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><string></string></value></param></params></methodResponse>`,
+			)
+
+			val, err := client.Call("test")
+
+			Expect(err).To(BeNil())
+			Expect(val.AsString()).To(Equal(""))
+		})
+
+		It("Can decode \"Hello, world!\"", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><string>Hello, world!</string></value></param></params></methodResponse>`,
+			)
+
+			val, err := client.Call("test")
+
+			Expect(err).To(BeNil())
+			Expect(val.AsString()).To(Equal("Hello, world!"))
+		})
+	})
 })
