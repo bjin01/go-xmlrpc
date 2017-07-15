@@ -5,6 +5,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
+	"time"
 )
 
 var _ = Describe("Value", func() {
@@ -106,6 +107,33 @@ var _ = Describe("Value", func() {
 
 			Expect(err).To(BeNil())
 			Expect(val.AsBool()).To(Equal(false))
+		})
+	})
+
+	Context("Encoding times", func() {
+		It("Can encode 1998-07-17T14:08:55Z", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><dateTime.iso8601>1998-07-17T14:08:55Z</dateTime.iso8601></value></param></params></methodCall>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><boolean>true</boolean></value></param></params></methodResponse>`,
+			)
+
+			_, err := client.Call("test", time.Date(1998, 7, 17, 14, 8, 55, 0, time.UTC))
+
+			Expect(err).To(BeNil())
+		})
+	})
+
+	Context("Decoding times", func() {
+		It("Can decode 1998-07-17T14:08:55Z", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+			`<?xml version="1.0"?><methodResponse><params><param><value><dateTime.iso8601>1998-07-17T14:08:55Z</dateTime.iso8601></value></param></params></methodResponse>`,
+			)
+
+			val, err := client.Call("test")
+
+			Expect(err).To(BeNil())
+			Expect(val.AsTime()).To(Equal(time.Date(1998, 7, 17, 14,8, 55, 0, time.UTC)))
 		})
 	})
 

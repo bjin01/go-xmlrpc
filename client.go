@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"sort"
 	"strconv"
+	"time"
 )
 
 type Client interface {
@@ -95,6 +96,14 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 			}
 
 			results = append(results, value{Struct: &structure{MemberTags: members}})
+		case reflect.Struct:
+			if v.Type().PkgPath() != "time" || v.Type().Name() != "Time" {
+				return nil, &XMLRPCError{"Invalid type " + v.Kind().String()}
+			}
+
+			t := arg.(time.Time)
+
+			results = append(results, value{DateTime: t.Format(time.RFC3339)})
 		default:
 			return nil, &XMLRPCError{"Invalid type " + v.Kind().String()}
 		}
