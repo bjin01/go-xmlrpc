@@ -84,7 +84,7 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 
 			for index, key := range v.MapKeys() {
 				if key.Kind() != reflect.String {
-					return nil, &XMLRPCError{"Invalid type " + v.Kind().String()}
+					return nil, &Error{"Invalid type " + v.Kind().String()}
 				}
 
 				keys[index] = key.String()
@@ -99,7 +99,7 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 				}
 
 				if len(values) != 1 {
-					return nil, &XMLRPCError{"Expected 1 element, got " + strconv.Itoa(len(values))}
+					return nil, &Error{"Expected 1 element, got " + strconv.Itoa(len(values))}
 				}
 
 				members[index].NameTag = key
@@ -109,14 +109,14 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 			results = append(results, value{StructTag: &structure{MemberTags: members}})
 		case reflect.Struct:
 			if v.Type().PkgPath() != "time" || v.Type().Name() != "Time" {
-				return nil, &XMLRPCError{"Invalid type " + v.Kind().String()}
+				return nil, &Error{"Invalid type " + v.Kind().String()}
 			}
 
 			t := arg.(time.Time)
 
 			results = append(results, value{DateTimeTag: t.Format(time.RFC3339)})
 		default:
-			return nil, &XMLRPCError{"Invalid type " + v.Kind().String()}
+			return nil, &Error{"Invalid type " + v.Kind().String()}
 		}
 	}
 
@@ -160,7 +160,7 @@ func (c *client) Call(methodName string, args ...interface{}) (Value, error) {
 	}
 
 	if methodResponse.ParamsTag != nil && len(methodResponse.ParamsTag.ParamTags) != 1 {
-		return nil, &XMLRPCError{"Invalid amount of return values"}
+		return nil, &Error{"Invalid amount of return values"}
 	}
 
 	if methodResponse.ParamsTag != nil && methodResponse.FaultTag == nil {
@@ -174,12 +174,12 @@ func (c *client) Call(methodName string, args ...interface{}) (Value, error) {
 			members[member.NameTag] = member.ValueTag
 		}
 
-		return nil, &XMLRPCFault{
+		return nil, &Fault{
 			message: members["faultString"].String(),
 			code:    members["faultCode"].Int(),
 		}
 	}
 
-	return nil, &XMLRPCError{"Invalid amount of return values"}
+	return nil, &Error{"Invalid amount of return values"}
 
 }

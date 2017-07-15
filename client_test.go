@@ -58,10 +58,10 @@ var _ = Describe("XMLRPC client", func() {
 		Expect(err).ToNot(BeNil())
 		Expect(val).To(BeNil())
 
-		fault, typeAssertion := err.(*xmlrpc.XMLRPCFault)
+		fault, typeAssertion := err.(*xmlrpc.Fault)
 
 		Expect(typeAssertion).To(BeTrue())
-		Expect(fault.FaultCode()).To(Equal(42))
-		Expect(fault.FaultString()).To(Equal("Invalid method name"))
+		Expect(fault.Code()).To(Equal(42))
+		Expect(fault.String()).To(Equal("Invalid method name"))
 	})
 })
