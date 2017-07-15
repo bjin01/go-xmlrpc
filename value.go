@@ -20,7 +20,7 @@ const (
 
 // Value is a wrapper around an actual XML-RPC value.
 type Value interface {
-	// As Array returns the value's underlying value, as a slice.
+	// AsArray returns the value's underlying value, as a slice.
 	// It panics if the value's Kind is not Array.
 	AsArray() []Value
 
