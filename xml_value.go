@@ -98,5 +98,47 @@ func (v value) AsStruct() []Member {
 }
 
 func (v value) Kind() Kind {
+	kinds := []Kind{}
+
+	if v.ArrayValueTags != nil {
+		kinds = append(kinds, Array)
+	}
+
+	if v.Base64 != nil {
+		kinds = append(kinds, Base64)
+	}
+
+	if v.Boolean != nil {
+		kinds = append(kinds, Boolean)
+	}
+
+	if v.DateTime != "" {
+		kinds = append(kinds, DateTime)
+	}
+
+	if v.Double != nil {
+		kinds = append(kinds, Double)
+	}
+
+	if v.I4 != nil {
+		kinds = append(kinds, Integer)
+	}
+
+	if v.Int != nil {
+		kinds = append(kinds, Integer)
+	}
+
+	if v.String != nil {
+		kinds = append(kinds, String)
+	}
+
+	if v.Struct != nil {
+		kinds = append(kinds, Struct)
+	}
+
+	if len(kinds) == 1 {
+		return kinds[0]
+	}
+
 	return Invalid
 }
