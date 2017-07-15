@@ -11,7 +11,10 @@ import (
 	"encoding/base64"
 )
 
+// A Client is an XML-RPC client.
 type Client interface {
+	// Call calls a remote method over XML-RPC using the specified arguments.
+	// It will return the remote methods result or an error.
 	Call(methodName string, args ...interface{}) (Value, error)
 }
 
@@ -20,6 +23,7 @@ type client struct {
 	endpoint string
 }
 
+// NewClient instantiates a new XML-RPC client bound to the specified endpoint.
 func NewClient(endpoint string) Client {
 	return &client{&http.Client{}, endpoint}
 }
