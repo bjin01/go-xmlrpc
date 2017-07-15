@@ -37,7 +37,7 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 		case reflect.Bool:
 			ptr := new(bool)
 			*ptr = v.Bool()
-			results = append(results, value{Boolean: ptr})
+			results = append(results, value{BooleanTag: ptr})
 		case reflect.Int:
 			fallthrough
 		case reflect.Int8:
@@ -49,18 +49,18 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 				XML []byte `xml:",innerxml"`
 			}{}
 			ptr.XML = []byte(strconv.Itoa(int(v.Int())))
-			results = append(results, value{Int: ptr})
+			results = append(results, value{IntTag: ptr})
 		case reflect.Float64:
 			ptr := new(float64)
 			*ptr = v.Float()
-			results = append(results, value{Double: ptr})
+			results = append(results, value{DoubleTag: ptr})
 		case reflect.Array:
 			fallthrough
 		case reflect.Slice:
 			if v.Type().Elem().Kind() == reflect.Uint8 {
 				ptr := new(string)
 				*ptr = base64.StdEncoding.EncodeToString(arg.([]byte))
-				results = append(results, value{Base64: ptr})
+				results = append(results, value{Base64Tag: ptr})
 			} else {
 				arguments := make([]interface{}, v.Len())
 				for index := 0; index < v.Len(); index++ {
@@ -77,7 +77,7 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 		case reflect.String:
 			ptr := new(string)
 			*ptr = v.String()
-			results = append(results, value{String: ptr})
+			results = append(results, value{StringTag: ptr})
 		case reflect.Map:
 			members := make([]member, v.Len())
 			keys := make([]string, v.Len())
@@ -106,7 +106,7 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 				members[index].ValueTag = values[0]
 			}
 
-			results = append(results, value{Struct: &structure{MemberTags: members}})
+			results = append(results, value{StructTag: &structure{MemberTags: members}})
 		case reflect.Struct:
 			if v.Type().PkgPath() != "time" || v.Type().Name() != "Time" {
 				return nil, &XMLRPCError{"Invalid type " + v.Kind().String()}
@@ -114,7 +114,7 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 
 			t := arg.(time.Time)
 
-			results = append(results, value{DateTime: t.Format(time.RFC3339)})
+			results = append(results, value{DateTimeTag: t.Format(time.RFC3339)})
 		default:
 			return nil, &XMLRPCError{"Invalid type " + v.Kind().String()}
 		}
@@ -170,13 +170,13 @@ func (c *client) Call(methodName string, args ...interface{}) (Value, error) {
 	if methodResponse.FaultTag != nil && methodResponse.ParamsTag == nil {
 		members := make(map[string]Value)
 
-		for _, member := range methodResponse.FaultTag.ValueTag.Struct.MemberTags {
+		for _, member := range methodResponse.FaultTag.ValueTag.StructTag.MemberTags {
 			members[member.NameTag] = member.ValueTag
 		}
 
 		return nil, &XMLRPCFault{
-			message: members["faultString"].AsString(),
-			code:    members["faultCode"].AsInt(),
+			message: members["faultString"].String(),
+			code:    members["faultCode"].Int(),
 		}
 	}
 

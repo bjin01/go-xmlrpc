@@ -20,37 +20,37 @@ const (
 
 // Value is a wrapper around an actual XML-RPC value.
 type Value interface {
-	// AsArray returns the value's underlying value, as a slice.
+	// Values returns the value's underlying value, as a slice.
 	// It panics if the value's Kind is not Array.
-	AsArray() []Value
+	Values() []Value
 
-	// AsBytes returns the value's underlying value, as a slice of byte.
+	// Bytes returns the value's underlying value, as a slice of byte.
 	// It panics if the value's Kind is not Base64.
-	AsBytes() []byte
+	Bytes() []byte
 
-	// AsBool returns the value's underlying value, as a bool.
+	// Bool returns the value's underlying value, as a bool.
 	// It panics if the value's Kind is not Bool.
-	AsBool() bool
+	Bool() bool
 
-	// AsTime returns the value's underlying value, as a time.Time.
+	// Time returns the value's underlying value, as a time.Time.
 	// It panics if the value's Kind is not DateTime.
-	AsTime() time.Time
+	Time() time.Time
 
-	// AsDouble returns the value's underlying value, as a float64.
+	// Double returns the value's underlying value, as a float64.
 	// It panics if the value's Kind is not Double.
-	AsDouble() float64
+	Double() float64
 
-	// AsInt returns the value's underlying value, as an int.
+	// Int returns the value's underlying value, as an int.
 	// It panics if the value's Kind is not Int.
-	AsInt() int
+	Int() int
 
-	// AsString returns the value's underlying value, as a string.
+	// String returns the value's underlying value, as a string.
 	// It panics if the value's Kind is not String.
-	AsString() string
+	String() string
 
-	// AsStruct returns the value's underlying value, as a slice of Member.
+	// Members returns the value's underlying value, as a slice of Member.
 	// It panics if the value's Kind is not Struct.
-	AsStruct() []Member
+	Members() []Member
 
 	// Kind returns the specific type of this value.
 	Kind() Kind

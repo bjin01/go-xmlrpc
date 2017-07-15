@@ -10,21 +10,21 @@ import (
 type value struct {
 	XMLName        xml.Name `xml:"value"`
 	ArrayValueTags *[]value `xml:"array>data>value,omitempty"`
-	Base64         *string   `xml:"base64,omitempty"`
-	Boolean        *bool    `xml:"boolean,omitempty"`
-	DateTime       string   `xml:"dateTime.iso8601,omitempty"`
-	Double         *float64 `xml:"double,omitempty"`
-	I4             *struct {
+	Base64Tag         *string   `xml:"base64,omitempty"`
+	BooleanTag        *bool    `xml:"boolean,omitempty"`
+	DateTimeTag       string   `xml:"dateTime.iso8601,omitempty"`
+	DoubleTag         *float64 `xml:"double,omitempty"`
+	I4Tag             *struct {
 		XML []byte `xml:",innerxml"`
 	} `xml:"i4,omitempty"`
-	Int *struct {
+	IntTag *struct {
 		XML []byte `xml:",innerxml"`
 	} `xml:"int,omitempty"`
-	String *string    `xml:"string,omitempty"`
-	Struct *structure `xml:"struct,omitempty"`
+	StringTag *string    `xml:"string,omitempty"`
+	StructTag *structure `xml:"struct,omitempty"`
 }
 
-func (v value) AsArray() []Value {
+func (v value) Values() []Value {
 	if v.ArrayValueTags == nil {
 		return []Value{}
 	}
@@ -38,18 +38,18 @@ func (v value) AsArray() []Value {
 	return values
 }
 
-func (v value) AsBytes() []byte {
-	bytes, _ := base64.StdEncoding.DecodeString(*v.Base64)
+func (v value) Bytes() []byte {
+	bytes, _ := base64.StdEncoding.DecodeString(*v.Base64Tag)
 
 	return bytes
 }
 
-func (v value) AsBool() bool {
-	return *v.Boolean
+func (v value) Bool() bool {
+	return *v.BooleanTag
 }
 
-func (v value) AsTime() time.Time {
-	t, err := time.Parse(time.RFC3339, v.DateTime)
+func (v value) Time() time.Time {
+	t, err := time.Parse(time.RFC3339, v.DateTimeTag)
 	if err != nil {
 		return time.Unix(0, 0)
 	}
@@ -57,20 +57,20 @@ func (v value) AsTime() time.Time {
 	return t
 }
 
-func (v value) AsDouble() float64 {
-	return *v.Double
+func (v value) Double() float64 {
+	return *v.DoubleTag
 }
 
-func (v value) AsInt() int {
-	if v.I4 != nil {
-		i, err := strconv.Atoi(string(v.I4.XML))
+func (v value) Int() int {
+	if v.I4Tag != nil {
+		i, err := strconv.Atoi(string(v.I4Tag.XML))
 		if err == nil {
 			return i
 		}
 	}
 
-	if v.Int != nil {
-		i, err := strconv.Atoi(string(v.Int.XML))
+	if v.IntTag != nil {
+		i, err := strconv.Atoi(string(v.IntTag.XML))
 		if err == nil {
 			return i
 		}
@@ -79,18 +79,18 @@ func (v value) AsInt() int {
 	return 0
 }
 
-func (v value) AsString() string {
-	return *v.String
+func (v value) String() string {
+	return *v.StringTag
 }
 
-func (v value) AsStruct() []Member {
-	if v.Struct == nil {
+func (v value) Members() []Member {
+	if v.StructTag == nil {
 		return []Member{}
 	}
 
-	members := make([]Member, 0, len(v.Struct.MemberTags))
+	members := make([]Member, 0, len(v.StructTag.MemberTags))
 
-	for _, member := range v.Struct.MemberTags {
+	for _, member := range v.StructTag.MemberTags {
 		members = append(members, member)
 	}
 
@@ -104,35 +104,35 @@ func (v value) Kind() Kind {
 		kinds = append(kinds, Array)
 	}
 
-	if v.Base64 != nil {
+	if v.Base64Tag != nil {
 		kinds = append(kinds, Base64)
 	}
 
-	if v.Boolean != nil {
+	if v.BooleanTag != nil {
 		kinds = append(kinds, Bool)
 	}
 
-	if v.DateTime != "" {
+	if v.DateTimeTag != "" {
 		kinds = append(kinds, DateTime)
 	}
 
-	if v.Double != nil {
+	if v.DoubleTag != nil {
 		kinds = append(kinds, Double)
 	}
 
-	if v.I4 != nil {
+	if v.I4Tag != nil {
 		kinds = append(kinds, Int)
 	}
 
-	if v.Int != nil {
+	if v.IntTag != nil {
 		kinds = append(kinds, Int)
 	}
 
-	if v.String != nil {
+	if v.StringTag != nil {
 		kinds = append(kinds, String)
 	}
 
-	if v.Struct != nil {
+	if v.StructTag != nil {
 		kinds = append(kinds, Struct)
 	}
 
