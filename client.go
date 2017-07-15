@@ -15,6 +15,21 @@ import (
 type Client interface {
 	// Call calls a remote method over XML-RPC using the specified arguments.
 	// It will return the remote methods result or an error.
+	//
+	// args is list of arguments to be passed to the remote method. Each element
+	// of args is a single arg, where arg is either one of:
+	//     - bool
+	//     - int
+	//     - int8
+	//     - int16
+	//     - int32
+	//     - float32
+	//     - float64
+	//     - string
+	//     - []byte
+	//     - []arg
+	//     - map[string]arg
+	//     - time.Time
 	Call(methodName string, args ...interface{}) (Value, error)
 }
 
