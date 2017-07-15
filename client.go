@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strconv"
 	"time"
+	"encoding/base64"
 )
 
 type Client interface {
@@ -52,17 +53,23 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 		case reflect.Array:
 			fallthrough
 		case reflect.Slice:
-			arguments := make([]interface{}, v.Len())
-			for index := 0; index < v.Len(); index++ {
-				arguments[index] = v.Index(index).Interface()
-			}
+			if v.Type().Elem().Kind() == reflect.Uint8 {
+				ptr := new(string)
+				*ptr = base64.StdEncoding.EncodeToString(arg.([]byte))
+				results = append(results, value{Base64: ptr})
+			} else {
+				arguments := make([]interface{}, v.Len())
+				for index := 0; index < v.Len(); index++ {
+					arguments[index] = v.Index(index).Interface()
+				}
 
-			values, err := c.values(arguments...)
-			if err != nil {
-				return nil, err
-			}
+				values, err := c.values(arguments...)
+				if err != nil {
+					return nil, err
+				}
 
-			results = append(results, value{ArrayValueTags: &values})
+				results = append(results, value{ArrayValueTags: &values})
+			}
 		case reflect.String:
 			ptr := new(string)
 			*ptr = v.String()

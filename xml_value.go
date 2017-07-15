@@ -4,12 +4,13 @@ import (
 	"encoding/xml"
 	"strconv"
 	"time"
+	"encoding/base64"
 )
 
 type value struct {
 	XMLName        xml.Name `xml:"value"`
 	ArrayValueTags *[]value `xml:"array>data>value,omitempty"`
-	Base64         []byte   `xml:"base64,omitempty"`
+	Base64         *string   `xml:"base64,omitempty"`
 	Boolean        *bool    `xml:"boolean,omitempty"`
 	DateTime       string   `xml:"dateTime.iso8601,omitempty"`
 	Double         *float64 `xml:"double,omitempty"`
@@ -39,7 +40,9 @@ func (v value) AsArray() []Value {
 }
 
 func (v value) AsBytes() []byte {
-	return v.Base64
+	bytes, _ := base64.StdEncoding.DecodeString(*v.Base64)
+
+	return bytes
 }
 
 func (v value) AsBool() bool {
