@@ -60,6 +60,56 @@ var _ = Describe("Value", func() {
 		})
 	})
 
+	Context("Encoding bytes", func() {
+		It("Can encode {}", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><base64></base64></value></param></params></methodCall>`,
+			`<?xml version="1.0"?><methodResponse><params><param><value><boolean>true</boolean></value></param></params></methodResponse>`,
+			)
+
+			_, err := client.Call("test", []byte{})
+
+			Expect(err).To(BeNil())
+		})
+
+		It("Can encode {\"Hello, world!\"}", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><base64>SGVsbG8sIHdvcmxkIQ==</base64></value></param></params></methodCall>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><boolean>true</boolean></value></param></params></methodResponse>`,
+			)
+
+			_, err := client.Call("test", []byte(`Hello, world!`))
+
+			Expect(err).To(BeNil())
+		})
+	})
+
+	Context("Decoding bytes", func() {
+		It("Can decode {}", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><base64></base64></value></param></params></methodResponse>`,
+			)
+
+			val, err := client.Call("test")
+
+			Expect(err).To(BeNil())
+			Expect(val.AsBytes()).To(Equal([]byte{}))
+		})
+
+		It("Can decode {\"Hello, world!\"}", func() {
+			verifyAndRespond(
+				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><base64>SGVsbG8sIHdvcmxkIQ==</base64></value></param></params></methodResponse>`,
+			)
+
+			val, err := client.Call("test")
+
+			Expect(err).To(BeNil())
+			Expect(val.AsBytes()).To(Equal([]byte(`Hello, world!`)))
+		})
+	})
+
 	Context("Encoding booleans", func() {
 		It("Can encode true", func() {
 			verifyAndRespond(
