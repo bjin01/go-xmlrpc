@@ -54,8 +54,11 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
+			Expect(val.Kind()).To(Equal(xmlrpc.Array))
 			Expect(len(val.AsArray())).To(Equal(2))
+			Expect(val.AsArray()[0].Kind()).To(Equal(xmlrpc.String))
 			Expect(val.AsArray()[0].AsString()).To(Equal("foo"))
+			Expect(val.AsArray()[1].Kind()).To(Equal(xmlrpc.String))
 			Expect(val.AsArray()[1].AsString()).To(Equal("bar"))
 		})
 	})
@@ -94,6 +97,7 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
+			Expect(val.Kind()).To(Equal(xmlrpc.Base64))
 			Expect(val.AsBytes()).To(Equal([]byte{}))
 		})
 
@@ -106,6 +110,7 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
+			Expect(val.Kind()).To(Equal(xmlrpc.Base64))
 			Expect(val.AsBytes()).To(Equal([]byte(`Hello, world!`)))
 		})
 	})
@@ -144,6 +149,7 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
+			Expect(val.Kind()).To(Equal(xmlrpc.Boolean))
 			Expect(val.AsBool()).To(Equal(true))
 		})
 
@@ -156,6 +162,7 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
+			Expect(val.Kind()).To(Equal(xmlrpc.Boolean))
 			Expect(val.AsBool()).To(Equal(false))
 		})
 	})
@@ -183,6 +190,7 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
+			Expect(val.Kind()).To(Equal(xmlrpc.DateTime))
 			Expect(val.AsTime()).To(Equal(time.Date(1998, 7, 17, 14,8, 55, 0, time.UTC)))
 		})
 	})
@@ -232,6 +240,7 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
+			Expect(val.Kind()).To(Equal(xmlrpc.Double))
 			Expect(val.AsDouble()).To(Equal(0.0))
 		})
 
@@ -244,6 +253,7 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
+			Expect(val.Kind()).To(Equal(xmlrpc.Double))
 			Expect(val.AsDouble()).To(Equal(1337.42))
 		})
 
@@ -256,6 +266,7 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
+			Expect(val.Kind()).To(Equal(xmlrpc.Double))
 			Expect(val.AsDouble()).To(Equal(-1337.42))
 		})
 	})
@@ -306,6 +317,7 @@ var _ = Describe("Value", func() {
 				val, err := client.Call("test")
 
 				Expect(err).To(BeNil())
+				Expect(val.Kind()).To(Equal(xmlrpc.Integer))
 				Expect(val.AsInt()).To(Equal(0))
 			})
 
@@ -318,6 +330,7 @@ var _ = Describe("Value", func() {
 				val, err := client.Call("test")
 
 				Expect(err).To(BeNil())
+				Expect(val.Kind()).To(Equal(xmlrpc.Integer))
 				Expect(val.AsInt()).To(Equal(1337))
 			})
 
@@ -330,6 +343,7 @@ var _ = Describe("Value", func() {
 				val, err := client.Call("test")
 
 				Expect(err).To(BeNil())
+				Expect(val.Kind()).To(Equal(xmlrpc.Integer))
 				Expect(val.AsInt()).To(Equal(-1337))
 			})
 		})
@@ -344,6 +358,7 @@ var _ = Describe("Value", func() {
 				val, err := client.Call("test")
 
 				Expect(err).To(BeNil())
+				Expect(val.Kind()).To(Equal(xmlrpc.Integer))
 				Expect(val.AsInt()).To(Equal(0))
 			})
 
@@ -356,6 +371,7 @@ var _ = Describe("Value", func() {
 				val, err := client.Call("test")
 
 				Expect(err).To(BeNil())
+				Expect(val.Kind()).To(Equal(xmlrpc.Integer))
 				Expect(val.AsInt()).To(Equal(1337))
 			})
 
@@ -368,6 +384,7 @@ var _ = Describe("Value", func() {
 				val, err := client.Call("test")
 
 				Expect(err).To(BeNil())
+				Expect(val.Kind()).To(Equal(xmlrpc.Integer))
 				Expect(val.AsInt()).To(Equal(-1337))
 			})
 		})
@@ -407,6 +424,7 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
+			Expect(val.Kind()).To(Equal(xmlrpc.String))
 			Expect(val.AsString()).To(Equal(""))
 		})
 
@@ -419,6 +437,7 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
+			Expect(val.Kind()).To(Equal(xmlrpc.String))
 			Expect(val.AsString()).To(Equal("Hello, world!"))
 		})
 	})
@@ -446,12 +465,16 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
+			Expect(val.Kind()).To(Equal(xmlrpc.Struct))
 			Expect(len(val.AsStruct())).To(Equal(2))
 
 			Expect(val.AsStruct()[0].Name()).To(Equal("answers"))
+			Expect(val.AsStruct()[0].Value().Kind()).To(Equal(xmlrpc.Array))
 			Expect(len(val.AsStruct()[0].Value().AsArray())).To(Equal(1))
+			Expect(val.AsStruct()[0].Value().AsArray()[0].Kind()).To(Equal(xmlrpc.Integer))
 			Expect(val.AsStruct()[0].Value().AsArray()[0].AsInt()).To(Equal(42))
 			Expect(val.AsStruct()[1].Name()).To(Equal("foo"))
+			Expect(val.AsStruct()[1].Value().Kind()).To(Equal(xmlrpc.String))
 			Expect(val.AsStruct()[1].Value().AsString()).To(Equal("bar"))
 		})
 	})
