@@ -50,9 +50,11 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 			}{}
 			ptr.XML = []byte(strconv.Itoa(int(v.Int())))
 			results = append(results, value{IntTag: ptr})
+		case reflect.Float32:
+			fallthrough
 		case reflect.Float64:
 			ptr := new(float64)
-			*ptr = v.Float()
+			*ptr = float64(v.Float())
 			results = append(results, value{DoubleTag: ptr})
 		case reflect.Array:
 			fallthrough
