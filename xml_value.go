@@ -2,21 +2,26 @@ package xmlrpc
 
 import (
 	"encoding/xml"
+	"strconv"
 	"time"
 )
 
 type value struct {
-	XMLName        xml.Name   `xml:"value"`
-	ArrayValueTags *[]value   `xml:"array>data>value,omitempty"`
-	Base64         []byte     `xml:"base64,omitempty"`
-	Boolean        *bool      `xml:"boolean,omitempty"`
-	DateTime       string     `xml:"dateTime.iso8601,omitempty"`
-	Double         *float64   `xml:"double,omitempty"`
-	I4             *int       `xml:"i4,omitempty"`
-	Int            *int       `xml:"int,omitempty"`
-	String         *string    `xml:"string,omitempty"`
-	Struct         *structure `xml:"struct,omitempty"`
-	Nil            string     `xml:"nil,omitempty"`
+	XMLName        xml.Name `xml:"value"`
+	ArrayValueTags *[]value `xml:"array>data>value,omitempty"`
+	Base64         []byte   `xml:"base64,omitempty"`
+	Boolean        *bool    `xml:"boolean,omitempty"`
+	DateTime       string   `xml:"dateTime.iso8601,omitempty"`
+	Double         *float64 `xml:"double,omitempty"`
+	I4             *struct {
+		XML []byte `xml:",innerxml"`
+	} `xml:"i4,omitempty"`
+	Int *struct {
+		XML []byte `xml:",innerxml"`
+	} `xml:"int,omitempty"`
+	String *string    `xml:"string,omitempty"`
+	Struct *structure `xml:"struct,omitempty"`
+	Nil    string     `xml:"nil,omitempty"`
 }
 
 func (v value) AsArray() []Value {
@@ -55,7 +60,21 @@ func (v value) AsDouble() float64 {
 }
 
 func (v value) AsInt() int {
-	return *v.Int
+	if v.I4 != nil {
+		i, err := strconv.Atoi(string(v.I4.XML))
+		if err == nil {
+			return i
+		}
+	}
+
+	if v.Int != nil {
+		i, err := strconv.Atoi(string(v.Int.XML))
+		if err == nil {
+			return i
+		}
+	}
+
+	return 0
 }
 
 func (v value) AsNil() interface{} {

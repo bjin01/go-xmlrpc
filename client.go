@@ -39,8 +39,10 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 		case reflect.Int16:
 			fallthrough
 		case reflect.Int32:
-			ptr := new(int)
-			*ptr = int(v.Int())
+			ptr := &struct {
+				XML []byte `xml:",innerxml"`
+			}{}
+			ptr.XML = []byte(strconv.Itoa(int(v.Int())))
 			results = append(results, value{Int: ptr})
 		case reflect.Float64:
 			ptr := new(float64)

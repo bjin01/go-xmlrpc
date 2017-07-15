@@ -218,40 +218,80 @@ var _ = Describe("Value", func() {
 	})
 
 	Context("Decoding integers", func() {
-		It("Can decode 0", func() {
-			verifyAndRespond(
-				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
-				`<?xml version="1.0"?><methodResponse><params><param><value><int>0</int></value></param></params></methodResponse>`,
-			)
+		Context("Wrapped in <int>", func() {
+			It("Can decode 0", func() {
+				verifyAndRespond(
+					`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+					`<?xml version="1.0"?><methodResponse><params><param><value><int>0</int></value></param></params></methodResponse>`,
+				)
 
-			val, err := client.Call("test")
+				val, err := client.Call("test")
 
-			Expect(err).To(BeNil())
-			Expect(val.AsInt()).To(Equal(0))
+				Expect(err).To(BeNil())
+				Expect(val.AsInt()).To(Equal(0))
+			})
+
+			It("Can decode 1337", func() {
+				verifyAndRespond(
+					`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+					`<?xml version="1.0"?><methodResponse><params><param><value><int>1337</int></value></param></params></methodResponse>`,
+				)
+
+				val, err := client.Call("test")
+
+				Expect(err).To(BeNil())
+				Expect(val.AsInt()).To(Equal(1337))
+			})
+
+			It("Can decode -1337", func() {
+				verifyAndRespond(
+					`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+					`<?xml version="1.0"?><methodResponse><params><param><value><int>-1337</int></value></param></params></methodResponse>`,
+				)
+
+				val, err := client.Call("test")
+
+				Expect(err).To(BeNil())
+				Expect(val.AsInt()).To(Equal(-1337))
+			})
 		})
 
-		It("Can decode 1337", func() {
-			verifyAndRespond(
-				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
-				`<?xml version="1.0"?><methodResponse><params><param><value><int>1337</int></value></param></params></methodResponse>`,
-			)
+		Context("Wrapped in <i4>", func() {
+			It("Can decode 0", func() {
+				verifyAndRespond(
+					`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+					`<?xml version="1.0"?><methodResponse><params><param><value><i4>0</i4></value></param></params></methodResponse>`,
+				)
 
-			val, err := client.Call("test")
+				val, err := client.Call("test")
 
-			Expect(err).To(BeNil())
-			Expect(val.AsInt()).To(Equal(1337))
-		})
+				Expect(err).To(BeNil())
+				Expect(val.AsInt()).To(Equal(0))
+			})
 
-		It("Can decode -1337", func() {
-			verifyAndRespond(
-				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
-				`<?xml version="1.0"?><methodResponse><params><param><value><int>-1337</int></value></param></params></methodResponse>`,
-			)
+			It("Can decode 1337", func() {
+				verifyAndRespond(
+					`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+					`<?xml version="1.0"?><methodResponse><params><param><value><i4>1337</i4></value></param></params></methodResponse>`,
+				)
 
-			val, err := client.Call("test")
+				val, err := client.Call("test")
 
-			Expect(err).To(BeNil())
-			Expect(val.AsInt()).To(Equal(-1337))
+				Expect(err).To(BeNil())
+				Expect(val.AsInt()).To(Equal(1337))
+			})
+
+			It("Can decode -1337", func() {
+				verifyAndRespond(
+					`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
+					`<?xml version="1.0"?><methodResponse><params><param><value><i4>-1337</i4></value></param></params></methodResponse>`,
+				)
+
+				val, err := client.Call("test")
+
+				Expect(err).To(BeNil())
+				Expect(val.AsInt()).To(Equal(-1337))
+			})
 		})
 	})
 
