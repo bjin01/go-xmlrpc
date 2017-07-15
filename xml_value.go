@@ -1,20 +1,20 @@
 package xmlrpc
 
 import (
+	"encoding/base64"
 	"encoding/xml"
 	"strconv"
 	"time"
-	"encoding/base64"
 )
 
 type value struct {
 	XMLName        xml.Name `xml:"value"`
 	ArrayValueTags *[]value `xml:"array>data>value,omitempty"`
-	Base64Tag         *string   `xml:"base64,omitempty"`
-	BooleanTag        *bool    `xml:"boolean,omitempty"`
-	DateTimeTag       string   `xml:"dateTime.iso8601,omitempty"`
-	DoubleTag         *float64 `xml:"double,omitempty"`
-	I4Tag             *struct {
+	Base64Tag      *string  `xml:"base64,omitempty"`
+	BooleanTag     *bool    `xml:"boolean,omitempty"`
+	DateTimeTag    string   `xml:"dateTime.iso8601,omitempty"`
+	DoubleTag      *float64 `xml:"double,omitempty"`
+	I4Tag          *struct {
 		XML []byte `xml:",innerxml"`
 	} `xml:"i4,omitempty"`
 	IntTag *struct {

@@ -67,7 +67,7 @@ var _ = Describe("Value", func() {
 		It("Can encode {}", func() {
 			verifyAndRespond(
 				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params><param><value><base64></base64></value></param></params></methodCall>`,
-			`<?xml version="1.0"?><methodResponse><params><param><value><boolean>true</boolean></value></param></params></methodResponse>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><boolean>true</boolean></value></param></params></methodResponse>`,
 			)
 
 			_, err := client.Call("test", []byte{})
@@ -184,14 +184,14 @@ var _ = Describe("Value", func() {
 		It("Can decode 1998-07-17T14:08:55Z", func() {
 			verifyAndRespond(
 				`<?xml version="1.0"?><methodCall><methodName>test</methodName><params></params></methodCall>`,
-			`<?xml version="1.0"?><methodResponse><params><param><value><dateTime.iso8601>1998-07-17T14:08:55Z</dateTime.iso8601></value></param></params></methodResponse>`,
+				`<?xml version="1.0"?><methodResponse><params><param><value><dateTime.iso8601>1998-07-17T14:08:55Z</dateTime.iso8601></value></param></params></methodResponse>`,
 			)
 
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
 			Expect(val.Kind()).To(Equal(xmlrpc.DateTime))
-			Expect(val.Time()).To(Equal(time.Date(1998, 7, 17, 14,8, 55, 0, time.UTC)))
+			Expect(val.Time()).To(Equal(time.Date(1998, 7, 17, 14, 8, 55, 0, time.UTC)))
 		})
 	})
 

@@ -2,13 +2,13 @@ package xmlrpc
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/xml"
 	"net/http"
 	"reflect"
 	"sort"
 	"strconv"
 	"time"
-	"encoding/base64"
 )
 
 // A Client is an XML-RPC client.
