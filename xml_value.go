@@ -96,3 +96,7 @@ func (v value) AsStruct() []Member {
 
 	return members
 }
+
+func (v value) Kind() Kind {
+	return Invalid
+}
