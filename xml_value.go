@@ -22,7 +22,6 @@ type value struct {
 	} `xml:"int,omitempty"`
 	String *string    `xml:"string,omitempty"`
 	Struct *structure `xml:"struct,omitempty"`
-	Nil    string     `xml:"nil,omitempty"`
 }
 
 func (v value) AsArray() []Value {
@@ -78,10 +77,6 @@ func (v value) AsInt() int {
 	}
 
 	return 0
-}
-
-func (v value) AsNil() interface{} {
-	return nil
 }
 
 func (v value) AsString() string {

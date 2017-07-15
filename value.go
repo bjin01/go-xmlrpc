@@ -9,7 +9,6 @@ type Value interface {
 	AsTime() time.Time
 	AsDouble() float64
 	AsInt() int
-	AsNil() interface{}
 	AsString() string
 	AsStruct() []Member
 }
