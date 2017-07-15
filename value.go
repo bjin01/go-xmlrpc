@@ -10,10 +10,10 @@ const (
 	Invalid Kind = iota
 	Array
 	Base64
-	Boolean
+	Bool
 	DateTime
 	Double
-	Integer
+	Int
 	String
 	Struct
 )
@@ -29,7 +29,7 @@ type Value interface {
 	AsBytes() []byte
 
 	// AsBool returns the value's underlying value, as a bool.
-	// It panics if the value's Kind is not Boolean.
+	// It panics if the value's Kind is not Bool.
 	AsBool() bool
 
 	// AsTime returns the value's underlying value, as a time.Time.
@@ -41,7 +41,7 @@ type Value interface {
 	AsDouble() float64
 
 	// AsInt returns the value's underlying value, as an int.
-	// It panics if the value's Kind is not Integer.
+	// It panics if the value's Kind is not Int.
 	AsInt() int
 
 	// AsString returns the value's underlying value, as a string.

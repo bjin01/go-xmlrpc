@@ -109,7 +109,7 @@ func (v value) Kind() Kind {
 	}
 
 	if v.Boolean != nil {
-		kinds = append(kinds, Boolean)
+		kinds = append(kinds, Bool)
 	}
 
 	if v.DateTime != "" {
@@ -121,11 +121,11 @@ func (v value) Kind() Kind {
 	}
 
 	if v.I4 != nil {
-		kinds = append(kinds, Integer)
+		kinds = append(kinds, Int)
 	}
 
 	if v.Int != nil {
-		kinds = append(kinds, Integer)
+		kinds = append(kinds, Int)
 	}
 
 	if v.String != nil {

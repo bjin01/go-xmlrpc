@@ -149,7 +149,7 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
-			Expect(val.Kind()).To(Equal(xmlrpc.Boolean))
+			Expect(val.Kind()).To(Equal(xmlrpc.Bool))
 			Expect(val.AsBool()).To(Equal(true))
 		})
 
@@ -162,7 +162,7 @@ var _ = Describe("Value", func() {
 			val, err := client.Call("test")
 
 			Expect(err).To(BeNil())
-			Expect(val.Kind()).To(Equal(xmlrpc.Boolean))
+			Expect(val.Kind()).To(Equal(xmlrpc.Bool))
 			Expect(val.AsBool()).To(Equal(false))
 		})
 	})
@@ -317,7 +317,7 @@ var _ = Describe("Value", func() {
 				val, err := client.Call("test")
 
 				Expect(err).To(BeNil())
-				Expect(val.Kind()).To(Equal(xmlrpc.Integer))
+				Expect(val.Kind()).To(Equal(xmlrpc.Int))
 				Expect(val.AsInt()).To(Equal(0))
 			})
 
@@ -330,7 +330,7 @@ var _ = Describe("Value", func() {
 				val, err := client.Call("test")
 
 				Expect(err).To(BeNil())
-				Expect(val.Kind()).To(Equal(xmlrpc.Integer))
+				Expect(val.Kind()).To(Equal(xmlrpc.Int))
 				Expect(val.AsInt()).To(Equal(1337))
 			})
 
@@ -343,7 +343,7 @@ var _ = Describe("Value", func() {
 				val, err := client.Call("test")
 
 				Expect(err).To(BeNil())
-				Expect(val.Kind()).To(Equal(xmlrpc.Integer))
+				Expect(val.Kind()).To(Equal(xmlrpc.Int))
 				Expect(val.AsInt()).To(Equal(-1337))
 			})
 		})
@@ -358,7 +358,7 @@ var _ = Describe("Value", func() {
 				val, err := client.Call("test")
 
 				Expect(err).To(BeNil())
-				Expect(val.Kind()).To(Equal(xmlrpc.Integer))
+				Expect(val.Kind()).To(Equal(xmlrpc.Int))
 				Expect(val.AsInt()).To(Equal(0))
 			})
 
@@ -371,7 +371,7 @@ var _ = Describe("Value", func() {
 				val, err := client.Call("test")
 
 				Expect(err).To(BeNil())
-				Expect(val.Kind()).To(Equal(xmlrpc.Integer))
+				Expect(val.Kind()).To(Equal(xmlrpc.Int))
 				Expect(val.AsInt()).To(Equal(1337))
 			})
 
@@ -384,7 +384,7 @@ var _ = Describe("Value", func() {
 				val, err := client.Call("test")
 
 				Expect(err).To(BeNil())
-				Expect(val.Kind()).To(Equal(xmlrpc.Integer))
+				Expect(val.Kind()).To(Equal(xmlrpc.Int))
 				Expect(val.AsInt()).To(Equal(-1337))
 			})
 		})
@@ -471,7 +471,7 @@ var _ = Describe("Value", func() {
 			Expect(val.AsStruct()[0].Name()).To(Equal("answers"))
 			Expect(val.AsStruct()[0].Value().Kind()).To(Equal(xmlrpc.Array))
 			Expect(len(val.AsStruct()[0].Value().AsArray())).To(Equal(1))
-			Expect(val.AsStruct()[0].Value().AsArray()[0].Kind()).To(Equal(xmlrpc.Integer))
+			Expect(val.AsStruct()[0].Value().AsArray()[0].Kind()).To(Equal(xmlrpc.Int))
 			Expect(val.AsStruct()[0].Value().AsArray()[0].AsInt()).To(Equal(42))
 			Expect(val.AsStruct()[1].Name()).To(Equal("foo"))
 			Expect(val.AsStruct()[1].Value().Kind()).To(Equal(xmlrpc.String))
