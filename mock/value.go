@@ -17,6 +17,12 @@ type Value struct {
 	KindMock    func() xmlrpc.Kind
 }
 
+func NewValue() *Value {
+	return &Value{
+		KindMock: func() xmlrpc.Kind { return xmlrpc.Invalid },
+	}
+}
+
 func (m *Value) Values() []xmlrpc.Value   { return m.ValuesMock() }
 func (m *Value) Bytes() []byte            { return m.BytesMock() }
 func (m *Value) Bool() bool               { return m.BoolMock() }
