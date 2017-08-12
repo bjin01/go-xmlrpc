@@ -8,7 +8,9 @@ type Member struct {
 }
 
 func NewMember() *Member {
-	return &Member{}
+	m := &Member{}
+	m.WithValue(NewValue())
+	return m
 }
 
 func (m *Member) Name() string {
