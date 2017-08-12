@@ -84,10 +84,7 @@ func (m *Value) WithMembers(actual map[string]xmlrpc.Value) *Value {
 func (Value) membersFromMap(vs map[string]xmlrpc.Value) []xmlrpc.Member {
 	m := make([]xmlrpc.Member, len(vs))
 	for n, v := range vs {
-		m = append(m, &Member{
-			NameMock:  func() string { return n },
-			ValueMock: func() xmlrpc.Value { return v },
-		})
+		m = append(m, NewMember().WithName(n).WithValue(v))
 	}
 	return m
 }
