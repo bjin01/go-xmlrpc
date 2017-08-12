@@ -6,9 +6,15 @@ import (
 	"testing"
 )
 
+// Client is a mock object for xmlrpc.Client. It can be used to fake XML-RPC
+// calls in tests. If the client contains a non-nil instance of *testing.T, it
+// will assert that any expectations about the call, that were made, hold true.
 type Client struct {
+	// CallMock will be invoked every time Call() is called.
 	CallMock func(methodName string, args ...interface{}) (xmlrpc.Value, error)
 
+	// Testing, if non-nill, will be used to assert that expectations about
+	// the call hold true.
 	Testing *testing.T
 
 	expectedMethodName    func(t *testing.T, actual string)
@@ -16,12 +22,18 @@ type Client struct {
 	expectedArguments     map[int]func(t *testing.T, actual interface{})
 }
 
+// NewClient returns a new mock object for xmlrpc.Client. If t is non-nil, it
+// will be used to assert that expectations about the call hold true. To get
+// any use out of the mock Client, you must set CallMock directly or call
+// either of WithValue() or WithError().
 func NewClient(t *testing.T) *Client {
 	return &Client{
 		Testing: t,
 	}
 }
 
+// Call invokes CallMock and returns its result. If the Testing is non-nil, it
+// will also assert that any expectations about the call hold true.
 func (m *Client) Call(methodName string, args ...interface{}) (v xmlrpc.Value, err error) {
 	if m.Testing == nil {
 		return m.CallMock(methodName, args...)
@@ -48,6 +60,8 @@ func (m *Client) Call(methodName string, args ...interface{}) (v xmlrpc.Value, e
 	return m.CallMock(methodName, args...)
 }
 
+// ExpectMethodName will assert that Call() is called with the expected
+// methodName when Call() is called and Testing is non-nil.
 func (m *Client) ExpectMethodName(expected string) {
 	m.expectedMethodName = func(t *testing.T, actual string) {
 		if actual != expected {
@@ -56,6 +70,8 @@ func (m *Client) ExpectMethodName(expected string) {
 	}
 }
 
+// ExpectArgumentCount will assert that Call() is called with the expected
+// number of args when Call() is called and Testing is non-nil.
 func (m *Client) ExpectArgumentCount(expected int) {
 	m.expectedArgumentCount = func(t *testing.T, actual int) {
 		if actual != expected {
@@ -64,6 +80,9 @@ func (m *Client) ExpectArgumentCount(expected int) {
 	}
 }
 
+// ExpectArgument will assert that Call() is called with an arg of a specific
+// kind and an expected value at a specific index in the args slice when
+// Call() is called and Testing is non-nil.
 func (m *Client) ExpectArgument(index int, kind reflect.Kind, expected interface{}) {
 	if m.expectedArguments == nil {
 		m.expectedArguments = make(map[int]func(t *testing.T, actual interface{}))
@@ -76,13 +95,17 @@ func (m *Client) ExpectArgument(index int, kind reflect.Kind, expected interface
 	}
 }
 
-func (m *Client) WithValue(value xmlrpc.Value) *Client {
+// WithValue assigns a func to CallMock. The func in CallMock will
+// return (v, nil).
+func (m *Client) WithValue(v xmlrpc.Value) *Client {
 	m.CallMock = func(methodName string, args ...interface{}) (xmlrpc.Value, error) {
-		return value, nil
+		return v, nil
 	}
 	return m
 }
 
+// WithError assigns a func to CallMock. The func in CallMock will
+// return (nil, err).
 func (m *Client) WithError(err error) *Client {
 	m.CallMock = func(methodName string, args ...interface{}) (xmlrpc.Value, error) {
 		return nil, err
