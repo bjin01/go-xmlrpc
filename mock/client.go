@@ -16,6 +16,12 @@ type Client struct {
 	expectedArguments     map[int]func(t *testing.T, actual interface{})
 }
 
+func NewClient(t *testing.T) *Client {
+	return &Client{
+		Testing: t,
+	}
+}
+
 func (m *Client) Call(methodName string, args ...interface{}) (v xmlrpc.Value, err error) {
 	if m.expectedMethodName != nil {
 		m.expectedMethodName(m.Testing, methodName)
@@ -64,4 +70,18 @@ func (m *Client) ExpectArgument(index int, kind reflect.Kind, expected interface
 			t.Errorf("args[%d] == %q, want %q", index, actual, expected)
 		}
 	}
+}
+
+func (m *Client) WithValue(value xmlrpc.Value) *Client {
+	m.CallMock = func(methodName string, args ...interface{}) (xmlrpc.Value, error) {
+		return value, nil
+	}
+	return m
+}
+
+func (m *Client) WithError(err error) *Client {
+	m.CallMock = func(methodName string, args ...interface{}) (xmlrpc.Value, error) {
+		return nil, err
+	}
+	return m
 }
