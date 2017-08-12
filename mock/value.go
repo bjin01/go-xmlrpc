@@ -27,65 +27,61 @@ func (m *Value) String() string           { return m.StringMock() }
 func (m *Value) Members() []xmlrpc.Member { return m.MembersMock() }
 func (m *Value) Kind() xmlrpc.Kind        { return m.KindMock() }
 
-func ValueReturningValues(actual ...xmlrpc.Value) *Value {
-	return &Value{
-		KindMock:   func() xmlrpc.Kind { return xmlrpc.Array },
-		ValuesMock: func() []xmlrpc.Value { return actual },
-	}
+func (m *Value) WithValues(actual ...xmlrpc.Value) *Value {
+	m.KindMock = func() xmlrpc.Kind { return xmlrpc.Array }
+	m.ValuesMock = func() []xmlrpc.Value { return actual }
+	return m
 }
 
-func ValueReturningBytes(actual []byte) *Value {
-	return &Value{
-		KindMock:  func() xmlrpc.Kind { return xmlrpc.Base64 },
-		BytesMock: func() []byte { return actual },
-	}
+func (m *Value) WithBytes(actual []byte) *Value {
+	m.KindMock = func() xmlrpc.Kind { return xmlrpc.Base64 }
+	m.BytesMock = func() []byte { return actual }
+	return m
 }
 
-func ValueReturningBool(actual bool) *Value {
-	return &Value{
-		KindMock: func() xmlrpc.Kind { return xmlrpc.Bool },
-		BoolMock: func() bool { return actual },
-	}
+func (m *Value) WithBool(actual bool) *Value {
+	m.KindMock = func() xmlrpc.Kind { return xmlrpc.Bool }
+	m.BoolMock = func() bool { return actual }
+	return m
 }
 
-func ValueReturningTime(actual time.Time) *Value {
-	return &Value{
-		KindMock: func() xmlrpc.Kind { return xmlrpc.DateTime },
-		TimeMock: func() time.Time { return actual },
-	}
+func (m *Value) WithTime(actual time.Time) *Value {
+	m.KindMock = func() xmlrpc.Kind { return xmlrpc.DateTime }
+	m.TimeMock = func() time.Time { return actual }
+	return m
 }
 
-func ValueReturningDouble(actual float64) *Value {
-	return &Value{
-		KindMock:   func() xmlrpc.Kind { return xmlrpc.Double },
-		DoubleMock: func() float64 { return actual },
-	}
+func (m *Value) WithDouble(actual float64) *Value {
+	m.KindMock = func() xmlrpc.Kind { return xmlrpc.Double }
+	m.DoubleMock = func() float64 { return actual }
+	return m
 }
 
-func ValueReturningInt(actual int) *Value {
-	return &Value{
-		KindMock: func() xmlrpc.Kind { return xmlrpc.Int },
-		IntMock:  func() int { return actual },
-	}
+func (m *Value) WithInt(actual int) *Value {
+	m.KindMock = func() xmlrpc.Kind { return xmlrpc.Int }
+	m.IntMock = func() int { return actual }
+	return m
 }
 
-func ValueReturningString(actual string) *Value {
-	return &Value{
-		KindMock:   func() xmlrpc.Kind { return xmlrpc.String },
-		StringMock: func() string { return actual },
-	}
+func (m *Value) WithString(actual string) *Value {
+	m.KindMock = func() xmlrpc.Kind { return xmlrpc.String }
+	m.StringMock = func() string { return actual }
+	return m
 }
 
-func ValueReturningMembers(actual map[string]xmlrpc.Value) *Value {
-	m := make([]xmlrpc.Member, 0)
-	for n, v := range actual {
+func (m *Value) WithMembers(actual map[string]xmlrpc.Value) *Value {
+	m.KindMock = func() xmlrpc.Kind { return xmlrpc.Struct }
+	m.MembersMock = func() []xmlrpc.Member { return m.membersFromMap(actual) }
+	return m
+}
+
+func (Value) membersFromMap(vs map[string]xmlrpc.Value) []xmlrpc.Member {
+	m := make([]xmlrpc.Member, len(vs))
+	for n, v := range vs {
 		m = append(m, &Member{
 			NameMock:  func() string { return n },
 			ValueMock: func() xmlrpc.Value { return v },
 		})
 	}
-	return &Value{
-		KindMock:    func() xmlrpc.Kind { return xmlrpc.Struct },
-		MembersMock: func() []xmlrpc.Member { return m },
-	}
+	return m
 }
