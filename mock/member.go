@@ -14,6 +14,7 @@ type Member struct {
 // it did have an empty name and contained an invalid xmlrpc.Value.
 func NewMember() *Member {
 	m := &Member{}
+	m.WithName("")
 	m.WithValue(NewValue())
 	return m
 }
