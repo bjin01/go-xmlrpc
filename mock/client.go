@@ -49,6 +49,12 @@ func (m *Client) Call(methodName string, args ...interface{}) (v xmlrpc.Value, e
 
 	if m.expectedArguments != nil {
 		for i, f := range m.expectedArguments {
+			if len(args) <= i {
+				m.Testing.Errorf("args[%d] is missing", i)
+
+				break
+			}
+
 			f(m.Testing, args[i])
 		}
 	}
