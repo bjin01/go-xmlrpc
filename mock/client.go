@@ -23,6 +23,10 @@ func NewClient(t *testing.T) *Client {
 }
 
 func (m *Client) Call(methodName string, args ...interface{}) (v xmlrpc.Value, err error) {
+	if m.Testing == nil {
+		return m.CallMock(methodName, args...)
+	}
+
 	if m.expectedMethodName != nil {
 		m.expectedMethodName(m.Testing, methodName)
 	}
