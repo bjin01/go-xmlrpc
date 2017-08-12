@@ -2,15 +2,15 @@ package mock
 
 import "github.com/SHyx0rmZ/go-xmlrpc"
 
-type mockMember struct {
+type Member struct {
 	NameMock  func() string
 	ValueMock func() xmlrpc.Value
 }
 
-func (m *mockMember) Name() string {
+func (m *Member) Name() string {
 	return m.NameMock()
 }
 
-func (m *mockMember) Value() xmlrpc.Value {
+func (m *Member) Value() xmlrpc.Value {
 	return m.ValueMock()
 }

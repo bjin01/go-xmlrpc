@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type mockValue struct {
+type Value struct {
 	ValuesMock  func() []xmlrpc.Value
 	BytesMock   func() []byte
 	BoolMock    func() bool
@@ -17,75 +17,75 @@ type mockValue struct {
 	KindMock    func() xmlrpc.Kind
 }
 
-func (m *mockValue) Values() []xmlrpc.Value   { return m.ValuesMock() }
-func (m *mockValue) Bytes() []byte            { return m.BytesMock() }
-func (m *mockValue) Bool() bool               { return m.BoolMock() }
-func (m *mockValue) Time() time.Time          { return m.TimeMock() }
-func (m *mockValue) Double() float64          { return m.DoubleMock() }
-func (m *mockValue) Int() int                 { return m.IntMock() }
-func (m *mockValue) String() string           { return m.StringMock() }
-func (m *mockValue) Members() []xmlrpc.Member { return m.MembersMock() }
-func (m *mockValue) Kind() xmlrpc.Kind        { return m.KindMock() }
+func (m *Value) Values() []xmlrpc.Value   { return m.ValuesMock() }
+func (m *Value) Bytes() []byte            { return m.BytesMock() }
+func (m *Value) Bool() bool               { return m.BoolMock() }
+func (m *Value) Time() time.Time          { return m.TimeMock() }
+func (m *Value) Double() float64          { return m.DoubleMock() }
+func (m *Value) Int() int                 { return m.IntMock() }
+func (m *Value) String() string           { return m.StringMock() }
+func (m *Value) Members() []xmlrpc.Member { return m.MembersMock() }
+func (m *Value) Kind() xmlrpc.Kind        { return m.KindMock() }
 
-func MockValueReturningValues(actual ...xmlrpc.Value) *mockValue {
-	return &mockValue{
+func ValueReturningValues(actual ...xmlrpc.Value) *Value {
+	return &Value{
 		KindMock:   func() xmlrpc.Kind { return xmlrpc.Array },
 		ValuesMock: func() []xmlrpc.Value { return actual },
 	}
 }
 
-func MockValueReturningBytes(actual []byte) *mockValue {
-	return &mockValue{
+func ValueReturningBytes(actual []byte) *Value {
+	return &Value{
 		KindMock:  func() xmlrpc.Kind { return xmlrpc.Base64 },
 		BytesMock: func() []byte { return actual },
 	}
 }
 
-func MockValueReturningBool(actual bool) *mockValue {
-	return &mockValue{
+func ValueReturningBool(actual bool) *Value {
+	return &Value{
 		KindMock: func() xmlrpc.Kind { return xmlrpc.Bool },
 		BoolMock: func() bool { return actual },
 	}
 }
 
-func MockValueReturningTime(actual time.Time) *mockValue {
-	return &mockValue{
+func ValueReturningTime(actual time.Time) *Value {
+	return &Value{
 		KindMock: func() xmlrpc.Kind { return xmlrpc.DateTime },
 		TimeMock: func() time.Time { return actual },
 	}
 }
 
-func MockValueReturningDouble(actual float64) *mockValue {
-	return &mockValue{
+func ValueReturningDouble(actual float64) *Value {
+	return &Value{
 		KindMock:   func() xmlrpc.Kind { return xmlrpc.Double },
 		DoubleMock: func() float64 { return actual },
 	}
 }
 
-func MockValueReturningInt(actual int) *mockValue {
-	return &mockValue{
+func ValueReturningInt(actual int) *Value {
+	return &Value{
 		KindMock: func() xmlrpc.Kind { return xmlrpc.Int },
 		IntMock:  func() int { return actual },
 	}
 }
 
-func MockValueReturningString(actual string) *mockValue {
-	return &mockValue{
+func ValueReturningString(actual string) *Value {
+	return &Value{
 		KindMock:   func() xmlrpc.Kind { return xmlrpc.String },
 		StringMock: func() string { return actual },
 	}
 }
 
-func MockValueReturningMembers(actual map[string]xmlrpc.Value) *mockValue {
-	members := make([]xmlrpc.Member, 0)
-	for name, value := range actual {
-		members = append(members, &mockMember{
-			NameMock:  func() string { return name },
-			ValueMock: func() xmlrpc.Value { return value },
+func ValueReturningMembers(actual map[string]xmlrpc.Value) *Value {
+	m := make([]xmlrpc.Member, 0)
+	for n, v := range actual {
+		m = append(m, &Member{
+			NameMock:  func() string { return n },
+			ValueMock: func() xmlrpc.Value { return v },
 		})
 	}
-	return &mockValue{
+	return &Value{
 		KindMock:    func() xmlrpc.Kind { return xmlrpc.Struct },
-		MembersMock: func() []xmlrpc.Member { return members },
+		MembersMock: func() []xmlrpc.Member { return m },
 	}
 }

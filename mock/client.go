@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-type mockClient struct {
+type Client struct {
 	CallMock func(methodName string, args ...interface{}) (xmlrpc.Value, error)
 
 	Testing *testing.T
@@ -16,7 +16,7 @@ type mockClient struct {
 	expectedArguments     map[int]func(t *testing.T, actual interface{})
 }
 
-func (m *mockClient) Call(methodName string, args ...interface{}) (v xmlrpc.Value, err error) {
+func (m *Client) Call(methodName string, args ...interface{}) (v xmlrpc.Value, err error) {
 	if m.expectedMethodName != nil {
 		m.expectedMethodName(m.Testing, methodName)
 	}
@@ -38,7 +38,7 @@ func (m *mockClient) Call(methodName string, args ...interface{}) (v xmlrpc.Valu
 	return m.CallMock(methodName, args...)
 }
 
-func (m *mockClient) ExpectMethodName(expected string) {
+func (m *Client) ExpectMethodName(expected string) {
 	m.expectedMethodName = func(t *testing.T, actual string) {
 		if actual != expected {
 			t.Errorf("methodName == %q, want %q", actual, expected)
@@ -46,7 +46,7 @@ func (m *mockClient) ExpectMethodName(expected string) {
 	}
 }
 
-func (m *mockClient) ExpectArgumentCount(expected int) {
+func (m *Client) ExpectArgumentCount(expected int) {
 	m.expectedArgumentCount = func(t *testing.T, actual int) {
 		if actual != expected {
 			t.Errorf("len(args) == %v, want %v", actual, expected)
@@ -54,7 +54,7 @@ func (m *mockClient) ExpectArgumentCount(expected int) {
 	}
 }
 
-func (m *mockClient) ExpectArgument(index int, kind reflect.Kind, expected interface{}) {
+func (m *Client) ExpectArgument(index int, kind reflect.Kind, expected interface{}) {
 	if m.expectedArguments == nil {
 		m.expectedArguments = make(map[int]func(t *testing.T, actual interface{}))
 	}
