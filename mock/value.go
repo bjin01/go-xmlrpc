@@ -135,7 +135,7 @@ func (m *Value) WithMembers(v map[string]xmlrpc.Value) *Value {
 }
 
 func (Value) membersFromMap(vs map[string]xmlrpc.Value) []xmlrpc.Member {
-	m := make([]xmlrpc.Member, len(vs))
+	m := make([]xmlrpc.Member, 0, len(vs))
 	for n, v := range vs {
 		m = append(m, NewMember().WithName(n).WithValue(v))
 	}
