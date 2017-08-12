@@ -59,10 +59,6 @@ func (m *Client) Call(methodName string, args ...interface{}) (v xmlrpc.Value, e
 		}
 	}
 
-	if m.Testing.Failed() {
-		m.Testing.FailNow()
-	}
-
 	return m.CallMock(methodName, args...)
 }
 
