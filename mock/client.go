@@ -108,7 +108,7 @@ func (m *Client) ExpectArgument(index int, kind reflect.Kind, expected interface
 			}
 
 			for sliceIndex := 0; sliceIndex < expectedValue.Len(); sliceIndex++ {
-				if actualValue.Index(sliceIndex) != expectedValue.Index(sliceIndex) {
+				if actualValue.Index(sliceIndex).Interface() != expectedValue.Index(sliceIndex).Interface() {
 					t.Errorf("args[%d] == %#v, want %#v", index, actual, expected)
 
 					return
