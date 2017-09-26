@@ -92,7 +92,7 @@ func (m *Client) ExpectArgument(index int, kind reflect.Kind, expected interface
 
 	m.expectedArguments[index] = func(t *testing.T, actual interface{}) {
 		if reflect.ValueOf(actual).Kind() != kind || actual != expected {
-			t.Errorf("args[%d] == %q (%T), want %q (%s)", index, actual, actual, expected, kind.String())
+			t.Errorf("args[%d] == %#v, want %#v", index, actual, expected)
 		}
 	}
 
