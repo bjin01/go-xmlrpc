@@ -95,6 +95,27 @@ func (m *Client) ExpectArgument(index int, kind reflect.Kind, expected interface
 			t.Errorf("args[%d] == %q (%T), want %q (%s)", index, actual, actual, expected, kind.String())
 		}
 	}
+
+	if kind == reflect.Slice {
+		m.expectedArguments[index] = func(t *testing.T, actual interface{}) {
+			actualValue := reflect.ValueOf(actual)
+			expectedValue := reflect.ValueOf(expected)
+
+			if actualValue.Kind() != kind || actualValue.Len() != expectedValue.Len() {
+				t.Errorf("args[%d] == %#v, want %#v", index, actual, expected)
+
+				return
+			}
+
+			for sliceIndex := 0; sliceIndex < expectedValue.Len(); sliceIndex++ {
+				if actualValue.Index(sliceIndex) != expectedValue.Index(sliceIndex) {
+					t.Errorf("args[%d] == %#v, want %#v", index, actual, expected)
+
+					return
+				}
+			}
+		}
+	}
 }
 
 // WithValue assigns a func to CallMock. The func in CallMock will
