@@ -12,12 +12,6 @@ resources:
     branch: master
     uri: git://github.com/SHyx0rmZ/go-xmlrpc.git
   check_every: 15m
-- name: code-mock
-  type: git
-  source:
-    branch: mock
-    uri: git://github.com/SHyx0rmZ/go-xmlrpc.git
-  check_every: 15m
 resource_types:
 - name: github-status
   type: docker-image
@@ -30,29 +24,6 @@ jobs:
   - get: code
     trigger: true
     version: every
-  - task: install-dependencies
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: golang
-          tag: latest
-      run:
-        path: sh
-        args:
-        - -ec
-        - |
-          export GOPATH=$PWD/gopath
-          export PATH=$PWD/gopath/bin:$PATH
-          cd gopath/src/github.com/SHyx0rmZ/go-xmlrpc
-          go mod vendor
-          mv vendor/* ../../../../../vendor
-      inputs:
-      - name: code
-        path: gopath/src/github.com/SHyx0rmZ/go-xmlrpc
-      outputs:
-      - name: vendor
   - task: run-tests
     config:
       platform: linux
@@ -66,7 +37,6 @@ jobs:
         args:
         - -ec
         - |
-          cp -a vendor gopath/src/github.com/SHyx0rmZ/go-xmlrpc
           export GOPATH=$PWD/gopath
           export PATH=$PWD/gopath/bin:$PATH
           cd gopath/src/github.com/SHyx0rmZ/go-xmlrpc
@@ -75,7 +45,6 @@ jobs:
       inputs:
       - name: code
         path: gopath/src/github.com/SHyx0rmZ/go-xmlrpc
-      - name: vendor
     on_failure:
       put: build-status
       params:
@@ -87,71 +56,6 @@ jobs:
       put: build-status
       params:
         commit: code
-        description: The commit passed all ginkgo tests.
-        state: success
-        target_url: https://github.com/SHyx0rmZ/go-xmlrpc
-- name: tests-mock
-  plan:
-  - get: code-mock
-    trigger: true
-    version: every
-  - task: install-dependencies
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: golang
-          tag: latest
-      run:
-        path: sh
-        args:
-        - -ec
-        - |
-          export GOPATH=$PWD/gopath
-          export PATH=$PWD/gopath/bin:$PATH
-          cd gopath/src/github.com/SHyx0rmZ/go-xmlrpc
-          go mod vendor
-          mv vendor/* ../../../../../vendor
-      inputs:
-      - name: code-mock
-        path: gopath/src/github.com/SHyx0rmZ/go-xmlrpc
-      outputs:
-      - name: vendor
-  - task: run-tests
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: golang
-          tag: latest
-      run:
-        path: sh
-        args:
-        - -ec
-        - |
-          cp -a vendor gopath/src/github.com/SHyx0rmZ/go-xmlrpc
-          export GOPATH=$PWD/gopath
-          export PATH=$PWD/gopath/bin:$PATH
-          cd gopath/src/github.com/SHyx0rmZ/go-xmlrpc
-          go install github.com/onsi/ginkgo/ginkgo
-          ginkgo -r -p
-      inputs:
-      - name: code-mock
-        path: gopath/src/github.com/SHyx0rmZ/go-xmlrpc
-      - name: vendor
-    on_failure:
-      put: build-status
-      params:
-        commit: code-mock
-        description: The commit failed some ginkgo tests.
-        state: failure
-        target_url: https://github.com/SHyx0rmZ/go-xmlrpc
-    on_success:
-      put: build-status
-      params:
-        commit: code-mock
         description: The commit passed all ginkgo tests.
         state: success
         target_url: https://github.com/SHyx0rmZ/go-xmlrpc
