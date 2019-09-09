@@ -36,7 +36,7 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: shyxormz/golang
+          repository: golang
           tag: latest
       run:
         path: sh
@@ -46,10 +46,7 @@ jobs:
           export GOPATH=$PWD/gopath
           export PATH=$PWD/gopath/bin:$PATH
           cd gopath/src/github.com/SHyx0rmZ/go-xmlrpc
-          go get github.com/onsi/ginkgo/ginkgo
-          go get github.com/Masterminds/glide
-          go install github.com/Masterminds/glide
-          glide install
+          go mod vendor
           mv vendor/* ../../../../../vendor
       inputs:
       - name: code
@@ -62,7 +59,7 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: shyxormz/golang
+          repository: golang
           tag: latest
       run:
         path: sh
@@ -73,6 +70,7 @@ jobs:
           export GOPATH=$PWD/gopath
           export PATH=$PWD/gopath/bin:$PATH
           cd gopath/src/github.com/SHyx0rmZ/go-xmlrpc
+          go install github.com/onsi/ginkgo/ginkgo
           ginkgo -r -p
       inputs:
       - name: code
@@ -103,9 +101,8 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: shyxormz/golang
+          repository: golang
           tag: latest
-        params: {}
       run:
         path: sh
         args:
@@ -114,10 +111,7 @@ jobs:
           export GOPATH=$PWD/gopath
           export PATH=$PWD/gopath/bin:$PATH
           cd gopath/src/github.com/SHyx0rmZ/go-xmlrpc
-          go get github.com/onsi/ginkgo/ginkgo
-          go get github.com/Masterminds/glide
-          go install github.com/Masterminds/glide
-          glide install
+          go mod vendor
           mv vendor/* ../../../../../vendor
       inputs:
       - name: code-mock
@@ -130,9 +124,8 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: shyxormz/golang
+          repository: golang
           tag: latest
-        params: {}
       run:
         path: sh
         args:
@@ -142,6 +135,7 @@ jobs:
           export GOPATH=$PWD/gopath
           export PATH=$PWD/gopath/bin:$PATH
           cd gopath/src/github.com/SHyx0rmZ/go-xmlrpc
+          go install github.com/onsi/ginkgo/ginkgo
           ginkgo -r -p
       inputs:
       - name: code-mock
