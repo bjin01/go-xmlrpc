@@ -44,9 +44,9 @@ type Value interface {
 	// It panics if the value's Kind is not Int.
 	Int() int
 
-	// String returns the value's underlying value, as a string.
+	// Text returns the value's underlying value, as a string.
 	// It panics if the value's Kind is not String.
-	String() string
+	Text() string
 
 	// Members returns the value's underlying value, as a slice of Member.
 	// It panics if the value's Kind is not Struct.

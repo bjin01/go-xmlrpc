@@ -57,9 +57,9 @@ var _ = Describe("Value", func() {
 			Expect(val.Kind()).To(Equal(xmlrpc.Array))
 			Expect(len(val.Values())).To(Equal(2))
 			Expect(val.Values()[0].Kind()).To(Equal(xmlrpc.String))
-			Expect(val.Values()[0].String()).To(Equal("foo"))
+			Expect(val.Values()[0].Text()).To(Equal("foo"))
 			Expect(val.Values()[1].Kind()).To(Equal(xmlrpc.String))
-			Expect(val.Values()[1].String()).To(Equal("bar"))
+			Expect(val.Values()[1].Text()).To(Equal("bar"))
 		})
 	})
 
@@ -425,7 +425,7 @@ var _ = Describe("Value", func() {
 
 			Expect(err).To(BeNil())
 			Expect(val.Kind()).To(Equal(xmlrpc.String))
-			Expect(val.String()).To(Equal(""))
+			Expect(val.Text()).To(Equal(""))
 		})
 
 		It("Can decode \"Hello, world!\"", func() {
@@ -438,7 +438,7 @@ var _ = Describe("Value", func() {
 
 			Expect(err).To(BeNil())
 			Expect(val.Kind()).To(Equal(xmlrpc.String))
-			Expect(val.String()).To(Equal("Hello, world!"))
+			Expect(val.Text()).To(Equal("Hello, world!"))
 		})
 	})
 
@@ -475,7 +475,7 @@ var _ = Describe("Value", func() {
 			Expect(val.Members()[0].Value().Values()[0].Int()).To(Equal(42))
 			Expect(val.Members()[1].Name()).To(Equal("foo"))
 			Expect(val.Members()[1].Value().Kind()).To(Equal(xmlrpc.String))
-			Expect(val.Members()[1].Value().String()).To(Equal("bar"))
+			Expect(val.Members()[1].Value().Text()).To(Equal("bar"))
 		})
 	})
 })

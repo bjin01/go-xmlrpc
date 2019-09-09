@@ -192,7 +192,7 @@ func (c *client) Call(methodName string, args ...interface{}) (Value, error) {
 		}
 
 		return nil, &Fault{
-			message: members["faultString"].String(),
+			message: members["faultString"].Text(),
 			code:    members["faultCode"].Int(),
 		}
 	}

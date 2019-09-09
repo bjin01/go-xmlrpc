@@ -62,7 +62,7 @@ func (m *Value) Double() float64 { return m.DoubleMock() }
 func (m *Value) Int() int { return m.IntMock() }
 
 // String invokes StringMock and returns its result.
-func (m *Value) String() string { return m.StringMock() }
+func (m *Value) Text() string { return m.StringMock() }
 
 // Members invokes MembersMock and returns its result.
 func (m *Value) Members() []xmlrpc.Member { return m.MembersMock() }

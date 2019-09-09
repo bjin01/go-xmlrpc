@@ -79,7 +79,7 @@ func (v value) Int() int {
 	return 0
 }
 
-func (v value) String() string {
+func (v value) Text() string {
 	return *v.StringTag
 }
 

@@ -157,7 +157,7 @@ var _ = Describe("mock Value", func() {
 						return "test-string"
 					}
 
-					Expect(value.String()).To(Equal("test-string"))
+					Expect(value.Text()).To(Equal("test-string"))
 				})
 
 				It("returns an invalid Kind", func() {
@@ -268,7 +268,7 @@ var _ = Describe("mock Value", func() {
 					value.WithString("test-string")
 
 					Expect(value.Kind()).To(Equal(xmlrpc.String))
-					Expect(value.String()).To(Equal("test-string"))
+					Expect(value.Text()).To(Equal("test-string"))
 				})
 			})
 

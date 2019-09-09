@@ -39,7 +39,7 @@ var _ = Describe("XMLRPC client", func() {
 		val, err := client.Call("foo")
 
 		Expect(err).To(BeNil())
-		Expect(val.String()).To(Equal("bar"))
+		Expect(val.Text()).To(Equal("bar"))
 	})
 
 	It("Can decode a fault", func() {
