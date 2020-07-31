@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -131,7 +132,9 @@ func (c *client) values(args ...interface{}) ([]value, error) {
 
 			t := arg.(time.Time)
 
-			results = append(results, value{DateTimeTag: t.Format(time.RFC3339)})
+			//This is a modification of Time Format to ISO8601 but without hyphens and Z for time zone.
+			//The modification is needed as spacewalk xmlrpc datetime.iso8601 expects it so.
+			results = append(results, value{DateTimeTag: t.Format("20060102T15:04:05")})
 		default:
 			return nil, &Error{"Invalid type " + v.Kind().String()}
 		}
@@ -162,6 +165,23 @@ func (c *client) Call(methodName string, args ...interface{}) (Value, error) {
 	err = xml.NewEncoder(buffer).Encode(methodCall)
 	if err != nil {
 		return nil, err
+	}
+
+	/* Below code part is to switch golang default boolean value 'true' and 'false' to 1 and 0.
+	This is neccessary because spacewalk xmlrpc api expect 1 or 0 as boolean value.
+	*/
+	if strings.Contains(buffer.String(), "<boolean>true</boolean>") {
+
+		newstrings := strings.Replace(buffer.String(), "<boolean>true</boolean>", "<boolean>1</boolean>", 1)
+		buffer.Reset()
+		buffer.WriteString(newstrings)
+
+	} else if strings.Contains(buffer.String(), "<boolean>false</boolean>") {
+
+		newstrings := strings.Replace(buffer.String(), "<boolean>false</boolean>", "<boolean>0</boolean>", 1)
+		buffer.Reset()
+		buffer.WriteString(newstrings)
+
 	}
 
 	response, err := c.client.Post(c.endpoint, "text/xml", buffer)

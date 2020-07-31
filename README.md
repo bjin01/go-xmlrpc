@@ -1,3 +1,8 @@
+# This go-xmlrpc package is a fork based on
+	github.com/SHyx0rmZ/go-xmlrpc
+
+__Due to some specialities of spacewalk/uyuni xmlrpc api (date format, boolean value 1 and 0) I needed to modify the package a little bit.__
+
 # go-xmlrpc
 
     import xmlrpc "github.com/SHyx0rmZ/go-xmlrpc"
